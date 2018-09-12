@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // ROUTES
-app.post("/movies", async (req, res) => {
+app.post("/movies", authenticate, async (req, res) => {
   // Pull out title from the request
   const title = req.body.title;
 
@@ -37,7 +37,8 @@ app.post("/movies", async (req, res) => {
     const movie = new Movie({
       title,
       movie: result,
-      id: result.imdbID
+      id: result.imdbID,
+      creator: req.user._id
     });
     // Save it to database
     const document = await movie.save();
@@ -49,10 +50,10 @@ app.post("/movies", async (req, res) => {
   }
 });
 
-app.get("/movies", async (req, res) => {
+app.get("/movies", authenticate, async (req, res) => {
   try {
     // Try to get all movies from DB
-    const movies = await Movie.find();
+    const movies = await Movie.find({ creator: req.user._id });
     // Send it back as a response
     res.send({ movies });
   } catch (err) {
@@ -130,6 +131,26 @@ app.post("/users", async (req, res) => {
 
 app.get("/users/me", authenticate, (req, res) => {
   res.send(req.user);
+});
+
+app.post("/users/login", async (req, res) => {
+  try {
+    const body = _.pick(req.body, ["username", "password"]);
+    const user = await User.findByCredentials(body.username, body.password);
+    const token = await user.generateAuthToken();
+    res.header("x-auth", token).send(user);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+app.delete("/users/me/token", authenticate, async (req, res) => {
+  try {
+    await req.user.removeToken(req.token);
+    res.status(200).send();
+  } catch (e) {
+    res.status(400).send();
+  }
 });
 
 app.listen(PORT, () =>

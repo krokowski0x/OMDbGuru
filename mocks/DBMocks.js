@@ -1,5 +1,12 @@
+const { ObjectID } = require("mongodb");
+const jwt = require("jsonwebtoken");
+
 const { Movie } = require("./../server/models/Movie");
 const { Comment } = require("./../server/models/Comment");
+const { User } = require("./../server/models/User");
+
+const userOneId = new ObjectID();
+const userTwoId = new ObjectID();
 
 const movies = [
   {
@@ -40,6 +47,7 @@ const movies = [
       Response: "True"
     },
     id: "tt0486592",
+    creator: userOneId,
     __v: 0
   },
   {
@@ -89,6 +97,7 @@ const movies = [
       Response: "True"
     },
     id: "tt2015381",
+    creator: userTwoId,
     __v: 0
   }
 ];
@@ -110,6 +119,31 @@ const comments = [
   }
 ];
 
+const users = [
+  {
+    _id: userOneId,
+    username: "andrew1",
+    password: "userOnePass",
+    tokens: [
+      {
+        access: "auth",
+        token: jwt.sign({ _id: userOneId, access: "auth" }, "abc123").toString()
+      }
+    ]
+  },
+  {
+    _id: userTwoId,
+    username: "anotherOne",
+    password: "userTwoPass",
+    tokens: [
+      {
+        access: "auth",
+        token: jwt.sign({ _id: userTwoId, access: "auth" }, "abc123").toString()
+      }
+    ]
+  }
+];
+
 const addMovies = done => {
   Movie.deleteMany({})
     .then(() => Movie.insertMany(movies))
@@ -122,4 +156,15 @@ const addComments = done => {
     .then(() => done());
 };
 
-module.exports = { movies, comments, addMovies, addComments };
+const addUsers = done => {
+  User.deleteMany({})
+    .then(() => {
+      const userOne = new User(users[0]).save();
+      const userTwo = new User(users[1]).save();
+
+      return Promise.all([userOne, userTwo]);
+    })
+    .then(() => done());
+};
+
+module.exports = { movies, comments, users, addMovies, addComments, addUsers };

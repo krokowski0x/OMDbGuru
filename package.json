@@ -5,9 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server/server.js",
-    "dev": "webpack-dev-server --mode development --open",
-    "build": "webpack --mode production",
-    "test": "(SET \"NODE_ENV=test\" || export NODE_ENV=test) && mocha test/*.test.js",
+    "test": "(SET \"NODE_ENV=test\" || export NODE_ENV=test) && mocha --timeout 5000 test/*.test.js",
     "test-watch": "nodemon --exec npm test"
   },
   "author": "Rafał Krókowski",
@@ -20,11 +18,16 @@
     "supertest": "^3.3.0"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parse": "^0.1.0",
     "cors": "^2.8.4",
     "express": "^4.16.3",
+    "jsonwebtoken": "^8.3.0",
+    "lodash": "^4.17.11",
     "mongodb": "^3.1.4",
     "mongoose": "^5.2.14",
-    "node-fetch": "^2.2.0"
+    "mustache": "^2.3.2",
+    "node-fetch": "^2.2.0",
+    "validator": "^10.7.1"
   }
 }

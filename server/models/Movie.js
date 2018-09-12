@@ -17,6 +17,10 @@ const Movie = mongoose.model("Movie", {
     required: true,
     minlength: 1,
     trim: true
+  },
+  creator: {
+    type: Schema.Types.ObjectId,
+    required: true
   }
 });
 
