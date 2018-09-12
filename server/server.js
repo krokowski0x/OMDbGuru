@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 
 const { mongoose } = require("./db/mongoose");
 const { Movie } = require("./models/Movie");
+const { Comment } = require("./models/Comment");
 
 const API_KEY = require("./APIKey");
 const API_URL = "http://www.omdbapi.com/?";
@@ -35,11 +36,25 @@ app.post("/movies", async (req, res) => {
   }
 });
 
-app.get("/movies", (req, res) => {});
+app.get("/movies", async (req, res) => {
+  try {
+    const movies = await Movie.find();
+    res.send({ movies });
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
 
-app.post("/comments", (req, res) => {});
+app.post("/comments", async (req, res) => {});
 
-app.post("/comments", (req, res) => {});
+app.get("/comments", async (req, res) => {
+  try {
+    const comments = await Comment.find();
+    res.send({ comments });
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
 
 app.listen(PORT, () =>
   console.info(`Sort Test app is running on port ${PORT}!`)
