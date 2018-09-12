@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const fetch = require("node-fetch");
 const cors = require("cors");
@@ -17,7 +18,7 @@ const API_URL = "http://www.omdbapi.com/?";
 const app = express();
 
 // Express middlewares
-app.use(express.static("public"));
+app.use("/static", express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -29,7 +30,7 @@ app.post("/movies", authenticate, async (req, res) => {
   try {
     // Get the movie by title form OMDb API
     const result = await fetch(
-      `${process.env.API_URL}t=${title}&apikey=${API_KEY}`
+      `${API_URL}t=${title}&apikey=${process.env.API_KEY}`
     ).then(response => response.json());
     // Create and validate Movie document
     const movie = new Movie({
@@ -66,7 +67,10 @@ app.post("/comments", async (req, res) => {
   // Check if there is a movie with given id
   const movie = await Movie.find({ id });
   // If not send 404 - Not Found
-  if (!movie.length) res.sendStatus(404);
+  if (!movie.length) {
+    res.sendStatus(404);
+    return;
+  }
 
   try {
     // Create and validate Comment document
@@ -103,7 +107,10 @@ app.get("/comments/:id", async (req, res) => {
   // Check if there is a comment with given id
   const comments = await Comment.find({ id });
   // If not send 404 - Not Found
-  if (!comments.length) res.sendStatus(404);
+  if (!comments.length) {
+    res.sendStatus(404);
+    return;
+  }
   try {
     // Send it back as a response
     res.send({ comments });
