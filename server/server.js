@@ -1,20 +1,26 @@
 const express = require("express");
 const fetch = require("node-fetch");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 
+// Mongoose models
 const { mongoose } = require("./db/mongoose");
 const { Movie } = require("./models/Movie");
 const { Comment } = require("./models/Comment");
 
+// Global constants
 const API_KEY = require("./APIKey");
 const API_URL = "http://www.omdbapi.com/?";
 const PORT = process.env.PORT || 3000;
 
 const app = express();
 
+// Express middlewares
 app.use(express.static("dist"));
 app.use(bodyParser.json());
+app.use(cors());
 
+// ROUTES
 app.post("/movies", async (req, res) => {
   const title = req.body.title;
 
