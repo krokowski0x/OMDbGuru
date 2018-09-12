@@ -1,11 +1,40 @@
 {
   "name": "omdb-guru",
   "version": "1.0.0",
-  "description": "Soon",
+  "description": "Personal movie library with own Express API and React Frontend",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server/server.js",
+    "dev": "webpack-dev-server --mode development --open",
+    "build": "webpack --mode production",
+    "test": "(SET \"NODE_ENV=test\" || export NODE_ENV=test) && mocha server/**/*.test.js",
+    "test-watch": "nodemon --exec npm test"
   },
   "author": "Rafał Krókowski",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "chai": "^4.1.2",
+    "css-loader": "^0.28.11",
+    "html-webpack-plugin": "^3.1.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.4",
+    "node-sass": "^4.9.3",
+    "sass-loader": "^6.0.7",
+    "style-loader": "^0.20.3",
+    "supertest": "^3.3.0",
+    "webpack": "^4.3.0",
+    "webpack-cli": "^2.0.13",
+    "webpack-dev-server": "^3.1.1"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "mongodb": "^3.1.4",
+    "mongoose": "^5.2.14",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
+  }
 }
