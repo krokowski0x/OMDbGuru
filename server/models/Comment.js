@@ -12,6 +12,10 @@ const Comment = mongoose.model("Comment", {
     required: true,
     minlength: 1,
     trim: true
+  },
+  createdAt: {
+    type: Date,
+    default: null
   }
 });
 

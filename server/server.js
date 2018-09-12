@@ -55,7 +55,8 @@ app.post("/comments", async (req, res) => {
   try {
     const comment = new Comment({
       id: req.body.id,
-      comment: req.body.comment
+      comment: req.body.comment,
+      createdAt: new Date()
     });
     const document = await comment.save();
     res.send(document);
