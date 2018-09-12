@@ -31,7 +31,8 @@ app.post("/movies", async (req, res) => {
 
     const movie = new Movie({
       title,
-      movie: result
+      movie: result,
+      id: result.imdbID
     });
 
     const document = await movie.save();
@@ -52,13 +53,19 @@ app.get("/movies", async (req, res) => {
 });
 
 app.post("/comments", async (req, res) => {
+  const id = req.body.id;
+  const movie = await Movie.find({ id });
+  if (!movie.length) res.sendStatus(404);
+
   try {
     const comment = new Comment({
-      id: req.body.id,
+      id,
       comment: req.body.comment,
       createdAt: new Date()
     });
+
     const document = await comment.save();
+
     res.send(document);
   } catch (err) {
     res.status(400).send(err);
@@ -79,7 +86,9 @@ app.get("/comments/:id", async (req, res) => {
 
   try {
     const comments = await Comment.find({ id });
-    res.send({ comments });
+
+    if (comments.length) res.send({ comments });
+    else res.sendStatus(404);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -88,3 +97,5 @@ app.get("/comments/:id", async (req, res) => {
 app.listen(PORT, () =>
   console.info(`Sort Test app is running on port ${PORT}!`)
 );
+
+module.exports = app;

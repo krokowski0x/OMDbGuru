@@ -11,6 +11,12 @@ const Movie = mongoose.model("Movie", {
   movie: {
     type: Schema.Types.Mixed,
     required: true
+  },
+  id: {
+    type: String,
+    required: true,
+    minlength: 1,
+    trim: true
   }
 });
 

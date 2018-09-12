@@ -7,7 +7,7 @@
     "start": "nodemon server/server.js",
     "dev": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production",
-    "test": "(SET \"NODE_ENV=test\" || export NODE_ENV=test) && mocha server/**/*.test.js",
+    "test": "(SET \"NODE_ENV=test\" || export NODE_ENV=test) && mocha test/*.test.js",
     "test-watch": "nodemon --exec npm test"
   },
   "author": "Rafał Krókowski",

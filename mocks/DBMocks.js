@@ -39,6 +39,7 @@ const movies = [
       Website: "N/A",
       Response: "True"
     },
+    id: "tt0486592",
     __v: 0
   },
   {
@@ -87,6 +88,7 @@ const movies = [
       Website: "http://marvel.com/guardians",
       Response: "True"
     },
+    id: "tt2015381",
     __v: 0
   }
 ];
@@ -109,18 +111,14 @@ const comments = [
 ];
 
 const addMovies = done => {
-  Movie.remove({})
-    .then(() => {
-      return Movie.insertMany(todos);
-    })
+  Movie.deleteMany({})
+    .then(() => Movie.insertMany(movies))
     .then(() => done());
 };
 
 const addComments = done => {
-  Comment.remove({})
-    .then(() => {
-      return Comment.insertMany(todos);
-    })
+  Comment.deleteMany({})
+    .then(() => Comment.insertMany(comments))
     .then(() => done());
 };
 
