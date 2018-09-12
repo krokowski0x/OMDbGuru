@@ -1,6 +1,5 @@
 const express = require("express");
 const fetch = require("node-fetch");
-const _ = require("lodash");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
@@ -11,10 +10,9 @@ const { Comment } = require("./models/Comment");
 const { User } = require("./models/User");
 const { authenticate } = require("./middleware/authenticate");
 
-// Global constants
-const API_KEY = require("./APIKey");
+// Global constants (API_URL and PORT)
+require("./config/config");
 const API_URL = "http://www.omdbapi.com/?";
-const PORT = process.env.PORT || 3000;
 
 const app = express();
 
@@ -30,9 +28,9 @@ app.post("/movies", authenticate, async (req, res) => {
 
   try {
     // Get the movie by title form OMDb API
-    const result = await fetch(`${API_URL}t=${title}&apikey=${API_KEY}`).then(
-      response => response.json()
-    );
+    const result = await fetch(
+      `${process.env.API_URL}t=${title}&apikey=${API_KEY}`
+    ).then(response => response.json());
     // Create and validate Movie document
     const movie = new Movie({
       title,
@@ -52,7 +50,7 @@ app.post("/movies", authenticate, async (req, res) => {
 
 app.get("/movies", authenticate, async (req, res) => {
   try {
-    // Try to get all movies from DB
+    // Try to get all movies that belong to this user from DB
     const movies = await Movie.find({ creator: req.user._id });
     // Send it back as a response
     res.send({ movies });
@@ -117,44 +115,59 @@ app.get("/comments/:id", async (req, res) => {
 
 app.post("/users", async (req, res) => {
   try {
+    // Pull out user data from the request
     const user = new User({
       username: req.body.username,
       password: req.body.password
     });
+    // Save him to database
     await user.save();
+    // Sign a JWT and push it to the tokens array
     const token = await user.generateAuthToken();
+    // Authenticate response via header and send it back
     res.header("x-auth", token).send(user);
   } catch (err) {
+    // 400 - Bad Request
     res.status(400).send(err);
   }
 });
 
 app.get("/users/me", authenticate, (req, res) => {
+  // Just get the user (rest is in the middleware)
   res.send(req.user);
 });
 
 app.post("/users/login", async (req, res) => {
   try {
-    const body = _.pick(req.body, ["username", "password"]);
-    const user = await User.findByCredentials(body.username, body.password);
+    // Pull out user data from the request and get this user from DB
+    const user = await User.findByCredentials(
+      req.body.username,
+      req.body.password
+    );
+    // Sign a JWT and push it to the tokens array
     const token = await user.generateAuthToken();
+    // Authenticate response via header and send it back
     res.header("x-auth", token).send(user);
   } catch (err) {
+    // 400 - Bad Request
     res.status(400).send(err);
   }
 });
 
 app.delete("/users/me/token", authenticate, async (req, res) => {
   try {
+    // Remove yourself from the DB (log out)
     await req.user.removeToken(req.token);
+    // Say that it went well
     res.status(200).send();
   } catch (e) {
+    // 400 - Bad Request
     res.status(400).send();
   }
 });
 
-app.listen(PORT, () =>
-  console.info(`Sort Test app is running on port ${PORT}!`)
+app.listen(process.env.PORT, () =>
+  console.info(`Sort Test app is running on port ${process.env.PORT}!`)
 );
 
 module.exports = app;
