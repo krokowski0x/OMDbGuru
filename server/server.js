@@ -1,5 +1,6 @@
 const express = require("express");
 const fetch = require("node-fetch");
+const _ = require("lodash");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
@@ -7,6 +8,8 @@ const bodyParser = require("body-parser");
 const { mongoose } = require("./db/mongoose");
 const { Movie } = require("./models/Movie");
 const { Comment } = require("./models/Comment");
+const { User } = require("./models/User");
+const { authenticate } = require("./middleware/authenticate");
 
 // Global constants
 const API_KEY = require("./APIKey");
@@ -109,6 +112,24 @@ app.get("/comments/:id", async (req, res) => {
     // 400 - Bad Request
     res.status(400).send(err);
   }
+});
+
+app.post("/users", async (req, res) => {
+  try {
+    const user = new User({
+      username: req.body.username,
+      password: req.body.password
+    });
+    await user.save();
+    const token = await user.generateAuthToken();
+    res.header("x-auth", token).send(user);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+app.get("/users/me", authenticate, (req, res) => {
+  res.send(req.user);
 });
 
 app.listen(PORT, () =>
