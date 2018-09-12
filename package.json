@@ -4,7 +4,7 @@
   "description": "Personal movie library with own Express API and React Frontend",
   "main": "index.js",
   "scripts": {
-    "start": "node server/server.js",
+    "start": "nodemon server/server.js",
     "dev": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production",
     "test": "(SET \"NODE_ENV=test\" || export NODE_ENV=test) && mocha server/**/*.test.js",
@@ -31,9 +31,11 @@
     "webpack-dev-server": "^3.1.1"
   },
   "dependencies": {
+    "body-parse": "^0.1.0",
     "express": "^4.16.3",
     "mongodb": "^3.1.4",
     "mongoose": "^5.2.14",
+    "node-fetch": "^2.2.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   }

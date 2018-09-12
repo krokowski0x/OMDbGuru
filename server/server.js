@@ -45,11 +45,33 @@ app.get("/movies", async (req, res) => {
   }
 });
 
-app.post("/comments", async (req, res) => {});
+app.post("/comments", async (req, res) => {
+  try {
+    const comment = new Comment({
+      id: req.body.id,
+      comment: req.body.comment
+    });
+    const document = await comment.save();
+    res.send(document);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
 
 app.get("/comments", async (req, res) => {
   try {
     const comments = await Comment.find();
+    res.send({ comments });
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+app.get("/comments/:id", async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const comments = await Comment.find({ id });
     res.send({ comments });
   } catch (err) {
     res.status(400).send(err);
