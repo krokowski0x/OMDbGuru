@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const Comment = mongoose.model("Comment", {
   id: {
@@ -16,6 +17,10 @@ const Comment = mongoose.model("Comment", {
   createdAt: {
     type: Date,
     default: null
+  },
+  creator: {
+    type: Schema.Types.ObjectId,
+    required: true
   }
 });
 

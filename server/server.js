@@ -26,7 +26,13 @@ app.use(cors());
 app.post("/movies", authenticate, async (req, res) => {
   // Pull out title from the request
   const title = req.body.title;
-
+  // Check if there is a movie with given title in DB
+  const movie = await Movie.find({ title });
+  // If true, just return 200
+  if (movie.length) {
+    res.sendStatus(200);
+    return;
+  }
   try {
     // Get the movie by title form OMDb API
     const result = await fetch(
@@ -61,7 +67,19 @@ app.get("/movies", authenticate, async (req, res) => {
   }
 });
 
-app.post("/comments", async (req, res) => {
+app.delete("/movies/:id", authenticate, async (req, res) => {
+  try {
+    // Try to get that movie from DB
+    const movie = await Movie.findOneAndRemove({ id: req.params.id });
+    // Send it back as a response
+    res.send(movie);
+  } catch (err) {
+    // 400 - Bad Request
+    res.status(400).send(err);
+  }
+});
+
+app.post("/comments", authenticate, async (req, res) => {
   // Pull out id from the request
   const id = req.body.id;
   // Check if there is a movie with given id
@@ -77,7 +95,8 @@ app.post("/comments", async (req, res) => {
     const comment = new Comment({
       id,
       comment: req.body.comment,
-      createdAt: new Date()
+      createdAt: new Date(),
+      creator: req.user._id
     });
     // Save it to database
     const document = await comment.save();
@@ -114,6 +133,26 @@ app.get("/comments/:id", async (req, res) => {
   try {
     // Send it back as a response
     res.send({ comments });
+  } catch (err) {
+    // 400 - Bad Request
+    res.status(400).send(err);
+  }
+});
+
+app.delete("/comments/:id", authenticate, async (req, res) => {
+  // Pull out id from the request
+  const id = req.params.id;
+
+  try {
+    // Check if there is a comment with given id
+    const comment = await Comment.findOneAndRemove({
+      _id: id,
+      creator: req.user._id
+    });
+    // If not send 404 - Not Found
+    if (!comment) return res.status(404).send();
+    // Send it back as a response
+    res.send({ comment });
   } catch (err) {
     // 400 - Bad Request
     res.status(400).send(err);
