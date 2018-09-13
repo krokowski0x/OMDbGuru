@@ -34,13 +34,6 @@ const UserSchema = new mongoose.Schema({
   ]
 });
 
-// UserSchema.methods.toJSON = function() {
-//   const user = this;
-//   const userObject = user.toObject();
-//
-//   return _.pick(userObject, ["_id", "username"]);
-// };
-
 // Not an arrow function, because of `this` binding
 UserSchema.methods.generateAuthToken = function() {
   const user = this;

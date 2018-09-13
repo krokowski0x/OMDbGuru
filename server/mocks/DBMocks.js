@@ -1,9 +1,9 @@
 const { ObjectID } = require("mongodb");
 const jwt = require("jsonwebtoken");
 
-const { Movie } = require("./../server/models/Movie");
-const { Comment } = require("./../server/models/Comment");
-const { User } = require("./../server/models/User");
+const { Movie } = require("../models/Movie");
+const { Comment } = require("../models/Comment");
+const { User } = require("../models/User");
 
 const userOneId = new ObjectID();
 const userTwoId = new ObjectID();
@@ -39,15 +39,17 @@ const comments = [
   {
     createdAt: "2018-09-12T17:12:18.107Z",
     _id: "5b9948f2fcb585b410012728",
-    id: "tt2015381",
+    id: "tt0486592",
     comment: "Hello",
+    creator: userOneId,
     __v: 0
   },
   {
     createdAt: "2018-09-12T17:12:51.088Z",
     _id: "5b994913fcb585b410012729",
-    id: "tt0486592",
+    id: "tt2015381",
     comment: "What up",
+    creator: userTwoId,
     __v: 0
   }
 ];
