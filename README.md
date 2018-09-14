@@ -2,37 +2,84 @@
 
 ## Brief Description
 
-## Requirements
+Personal movie library with own Express API and React Frontend.
 
-### POST /movies:
+## API Endpoints
 
-- [x] Request body should contain only movie title, and its presence should be validated.
-- [x] Based on passed title, other movie details should be fetched from http://www.omdbapi.com/ (or other similar, public movie database) - and saved to application database.
-- [x] Request response should include full movie object, along with all data fetched from external API.
+### Required
 
-### GET /movies:
+- [x] **POST /movies** - add movie to Your list (with authentication)
+- [x] **GET /movies** - get all Your movies (with authentication)
+- [x] **POST /comments** - add a comment to the movie (with authentication)
+- [x] **GET /comments** - get all the comments to certain movie
 
-- [x] Should fetch list of all movies already present in application database.
-- [ ] Additional filtering, sorting is fully optional (BONUS points)
+### Additional
 
-### POST /comments:
+- [x] **DELETE /movies/:id** - remove certain movie from the list (with authentication)
+- [x] **GET /comments/:id** - get certain comment
+- [x] **DELETE /comments/:id** - remove certain comment (with authentication)
+- [x] **POST /users** - sign up
+- [x] **GET /users/me** - check if I exist in DB
+- [x] **POST /users/login** - log in
+- [x] **DELETE /users/me/token** - log out
 
-- [x] Request body should contain ID of movie already present in database, and comment text body.
-- [x] Comment should be saved to application database and returned in request response.
+## Other functionality
 
-### GET /comments:
+### Required (or encouraged)
 
-- [x] Should fetch list of all comments present in application database.
-- [x] Should allow filtering comments by associated movie, by passing its ID.
+- [x] Used latest ECMAScript (ES8+) standard
+- [x] Added basic tests of endpoints and their functionality
+- [x] Pushed to public repository
+- [x] Include README file, notes on application requirements and setup
+- [x] Deployed app to Heroku
 
-## Additional rules
+### Additional
 
-- [x] Usage of latest ECMAScript/TypeScript standard and features is encouraged.
-- [x] You are free to write your solution using framework, libraries and database of your choice - sharing your reasoning behind choosing them is welcome!
-- [x] At least basic tests of endpoints and their functionality are obligatory. Their exact scope and form is left up to you.
-- [x] The application's code should be kept in a public repository so that we can read it, pull it and build it ourselves. Remember to include README file or at least basic notes on application requirements and setup - we should be able to easily and quickly get it running.
-- [x] Written application must be hosted and publicly available for us online - we recommend Heroku.
+- [x] Added User model and custom authentication
+- [x] Added React Frontend to interact with all the endpoints in real-time
+- [x] Fully tested all endpoints with custom mocks and beforeEach functions (all tests passing)
+- [x] Waaaay more!
+
+## Prerequisites
+
+If you want to make some changes, first you have to have [Node with npm](https://nodejs.org/en/) installed.
+
+### Installation
+
+After cloning this repository, in the project directory, you have to install dependencies:
+
+```
+npm i
+```
+
+Then you should run:
+
+```
+npm start
+```
+
+App should be up and running, so give it a try!
+To interact with API, I recommend using [Postman](https://www.getpostman.com/).
+And if You like watching all tests passing, run:
+
+```
+npm test
+```
 
 ## Built With
 
-- [Express](https://expressjs.com/) - Web framework for [Node.js](https://nodejs.org/en/) which needs no introduction
+### Backend
+
+- [Express](https://expressjs.com/) - Web/API building framework for [Node.js](https://nodejs.org/en/) which needs no introduction
+- [Postman](https://www.getpostman.com/) - API endpoints testing tool
+- [MongoDB](https://www.mongodb.com/) - most popular NoSQL database, with great Node tooling such as [Mongoose](https://mongoosejs.com/) for object modeling
+- [Mocha](https://mochajs.org/), [Chai](http://www.chaijs.com/) and [Supertest](https://github.com/visionmedia/supertest) for well structured, BDD tests and assertions
+- [Body Parser](https://github.com/expressjs/body-parser#readme), [cors](https://github.com/expressjs/cors), [Nodemon](https://nodemon.io/), [Lodash](https://lodash.com/) and [Node Fetch](https://www.npmjs.com/package/node-fetch) - helpers, polyfills and Express middlewares
+- [Bcrypt](https://github.com/kelektiv/node.bcrypt.js) and [JSON Web Token](https://github.com/auth0/node-jsonwebtoken) for security, hashing, salting and authentication
+
+### Frontend
+
+- [React](https://reactjs.org/) - best of all JS frameworks (IMO)
+- [Webpack](https://webpack.js.org/) with [Babel](https://babeljs.io/) - bundler and compiler for newest ECMAScript standard
+- [Heroku](https://www.heroku.com/) - Cloud platform which can run Node.js
+- [Sematic UI React](http://react.semantic-ui.com/) - reusable UI components for React
